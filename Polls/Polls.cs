@@ -3,7 +3,6 @@ using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using MEC;
-using ServerHandler = Exiled.Events.Handlers.Server;
 
 namespace Polls
 {
@@ -15,29 +14,19 @@ namespace Polls
         public override PluginPriority Priority { get; } = PluginPriority.Medium;
 
         public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
-        public override Version Version { get; } = new Version(1, 0, 2);
+        public override Version Version { get; } = new Version(1, 0, 4);
 
         public Poll ActivePoll = null;
-        public Commands.Vote vote = null;
 
         public Polls()
         { }
 
         public override void OnEnabled()
-        {
-            vote = new Commands.Vote();
-
-            ServerHandler.SendingConsoleCommand += vote.OnSendingConsoleCommand;
-        }
+        { }
 
         public override void OnDisabled()
         {
             if (!(ActivePoll is null)) { Timing.KillCoroutines(ActivePoll.ActiveCoro); }
-
-            ServerHandler.SendingConsoleCommand -= vote.OnSendingConsoleCommand;
-
-            vote = null;
-            ActivePoll = null;
         }
     }
 
@@ -56,13 +45,8 @@ namespace Polls
             Votes = new int[2] { 0, 0 };
             AlreadyVoted = new List<Player>();
 
-            Broadcast();
-            EndPoll(PollDuration);
-        }
-
-        private void Broadcast()
-        {
             BroadcastToAllPlayers(BroadcastTime, $"Poll: {PollName}\nType \".vote yes\" or \".vote no\" in the console to vote!");
+            EndPoll(PollDuration);
         }
 
         private void EndPoll(int delay)
@@ -78,6 +62,7 @@ namespace Polls
         {
             foreach (var player in Player.List)
             {
+                player.ClearBroadcasts();
                 player.Broadcast(time, message);
             }
         }

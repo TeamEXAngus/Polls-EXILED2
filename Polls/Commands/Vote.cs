@@ -1,39 +1,46 @@
-﻿using Exiled.API.Features;
-using Exiled.Events.EventArgs;
+﻿using CommandSystem;
+using Exiled.API.Features;
+using System;
 
 namespace Polls.Commands
 {
-    public class Vote
+    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    internal class Vote : ICommand
     {
-        private static Polls Plugin => Polls.Instance;
+        private static Poll ActivePoll => Polls.Instance.ActivePoll;
 
-        public void OnSendingConsoleCommand(SendingConsoleCommandEventArgs ev)
+        public string Command { get; } = "vote";
+
+        public string[] Aliases { get; } = { };
+
+        public string Description { get; } = "Creates a poll which server users can vote in.";
+
+        public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (ev.Name != "vote") { return; }
+            var playerSender = sender as Player;
 
-            if (Plugin.ActivePoll is null) { ev.ReturnMessage = "There is no currently active poll!"; return; }
+            if (ActivePoll is null) { response = "There is no currently active poll!"; return false; }
+            if (ActivePoll.AlreadyVoted.Contains(playerSender)) { response = "You've already voted on this poll!"; return false; }
 
-            if (Plugin.ActivePoll.AlreadyVoted.Contains(ev.Player)) { ev.ReturnMessage = "You've already voted on this poll!"; return; }
-
-            switch (ev.Arguments[0].ToLower())
+            switch (arguments.At(0))
             {
                 case "yes":
                 case "y":
-                    Plugin.ActivePoll.Votes[0]++;
-                    Plugin.ActivePoll.AlreadyVoted.Add(ev.Player);
-                    ev.ReturnMessage = "Voted yes!";
-                    break;
+                    ActivePoll.Votes[0]++;
+                    ActivePoll.AlreadyVoted.Add(playerSender);
+                    response = "Voted yes!";
+                    return true;
 
                 case "no":
                 case "n":
-                    Plugin.ActivePoll.Votes[1]++;
-                    Plugin.ActivePoll.AlreadyVoted.Add(ev.Player);
-                    ev.ReturnMessage = "Voted no!";
-                    break;
+                    ActivePoll.Votes[1]++;
+                    ActivePoll.AlreadyVoted.Add(playerSender);
+                    response = "Voted no!";
+                    return true;
 
                 default:
-                    ev.ReturnMessage = "Invalid option! Choose \"yes\" or \"no\"!";
-                    break;
+                    response = "Invalid option! Choose \"yes\" or \"no\"!";
+                    return false;
             }
         }
     }
