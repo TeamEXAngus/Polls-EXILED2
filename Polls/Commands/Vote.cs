@@ -9,7 +9,6 @@ namespace Polls.Commands
 
         public void OnSendingConsoleCommand(SendingConsoleCommandEventArgs ev)
         {
-            Log.Debug($"{ev.Name} | {ev.Arguments}");
             if (ev.Name != "vote") { return; }
 
             if (Plugin.ActivePoll is null) { ev.ReturnMessage = "There is no currently active poll!"; return; }
