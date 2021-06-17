@@ -21,15 +21,18 @@ namespace Polls.Commands
                 case "y":
                     Plugin.ActivePoll.Votes[0]++;
                     Plugin.ActivePoll.AlreadyVoted.Add(ev.Player);
+                    ev.ReturnMessage = "Voted yes!";
                     break;
 
                 case "no":
                 case "n":
                     Plugin.ActivePoll.Votes[1]++;
                     Plugin.ActivePoll.AlreadyVoted.Add(ev.Player);
+                    ev.ReturnMessage = "Voted no!";
                     break;
 
                 default:
+                    ev.ReturnMessage = "Invalid option! Choose \"yes\" or \"no\"!";
                     break;
             }
         }
