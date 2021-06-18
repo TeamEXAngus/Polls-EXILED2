@@ -4,7 +4,7 @@ using System;
 
 namespace Polls.Commands
 {
-    [CommandHandler(typeof(GameConsoleCommandHandler))]
+    [CommandHandler(typeof(ClientCommandHandler))]
     internal class Vote : ICommand
     {
         private static Poll ActivePoll => Polls.Instance.ActivePoll;
