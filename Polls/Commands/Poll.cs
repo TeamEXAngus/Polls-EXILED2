@@ -22,6 +22,12 @@ namespace Commands.StartPoll
                 return false;
             }
 
+            if (!(Polls.Polls.Instance.ActivePoll is null))
+            {
+                response = "There is an already active poll!";
+                return false;
+            }
+
             if (arguments.Count == 0)
             {
                 response = "You must specify a message for the poll!";
