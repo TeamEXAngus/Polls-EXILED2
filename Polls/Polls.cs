@@ -36,11 +36,14 @@ namespace Polls
         public int[] Votes;
         public List<Player> AlreadyVoted;
         public CoroutineHandle ActiveCoro;
-        private readonly ushort BroadcastTime = Polls.Instance.Config.PollTextDuration;
-        private readonly int PollDuration = Polls.Instance.Config.PollDuration;
+        private readonly ushort BroadcastTime;
+        private readonly int PollDuration;
 
         public Poll(string name)
         {
+            BroadcastTime = Polls.Instance.Config.PollTextDuration;
+            PollDuration = Polls.Instance.Config.PollDuration;
+
             PollName = name;
             Votes = new int[2] { 0, 0 };
             AlreadyVoted = new List<Player>();
