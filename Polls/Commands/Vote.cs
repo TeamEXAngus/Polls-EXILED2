@@ -18,7 +18,7 @@ namespace Polls.Commands
 
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            var playerSender = sender as Player;
+            var playerSender = Player.Get((sender as CommandSender)?.SenderId);
 
             if (ActivePoll is null) { response = "There is no currently active poll!"; return false; }
             if (ActivePoll.AlreadyVoted.Contains(playerSender)) { response = "You've already voted on this poll!"; return false; }
