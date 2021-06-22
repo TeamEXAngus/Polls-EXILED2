@@ -5,6 +5,7 @@ using System;
 namespace Commands.StartPoll
 {
     [CommandHandler(typeof(RemoteAdminCommandHandler))]
+    [CommandHandler(typeof(ClientCommandHandler))]
     internal class Poll : ICommand
     {
         public string Command { get; } = "poll";

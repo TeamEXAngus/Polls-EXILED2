@@ -4,6 +4,7 @@ using System;
 
 namespace Polls.Commands
 {
+    [CommandHandler(typeof(RemoteAdminCommandHandler))]
     [CommandHandler(typeof(ClientCommandHandler))]
     internal class Vote : ICommand
     {
