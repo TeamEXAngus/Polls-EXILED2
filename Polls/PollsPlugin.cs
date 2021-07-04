@@ -1,28 +1,26 @@
-﻿using Exiled.API.Enums;
-using Exiled.API.Features;
+﻿using Exiled.API.Features;
 using System;
 using System.Collections.Generic;
 using MEC;
 
 namespace Polls
 {
-    public class Polls : Plugin<Config>
+    public class PollsPlugin : Plugin<Config>
     {
-        private static Polls singleton = new Polls();
-        public static Polls Instance => singleton;
-
-        public override PluginPriority Priority { get; } = PluginPriority.Medium;
+        public static PollsPlugin Instance;
 
         public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
         public override Version Version { get; } = new Version(1, 0, 6);
 
         public Poll ActivePoll = null;
 
-        public Polls()
+        public PollsPlugin()
         { }
 
         public override void OnEnabled()
-        { }
+        {
+            Instance = this;
+        }
 
         public override void OnDisabled()
         {
@@ -36,13 +34,17 @@ namespace Polls
         public int[] Votes;
         public List<Player> AlreadyVoted;
         public CoroutineHandle ActiveCoro;
-        private readonly ushort BroadcastTime;
-        private readonly int PollDuration;
+        private ushort BroadcastTime;
+        private int PollDuration;
 
         public Poll(string name)
         {
-            BroadcastTime = Polls.Instance.Config.PollTextDuration;
-            PollDuration = Polls.Instance.Config.PollDuration;
+            BroadcastTime = PollsPlugin.Instance.Config.PollTextDuration;
+            PollDuration = PollsPlugin.Instance.Config.PollDuration;
+
+            Log.Debug($"New Poll created! BroadcastTime is {BroadcastTime} and PollDuration is {PollDuration}");
+            Log.Debug($"Config.PollTextDuration is {PollsPlugin.Instance.Config.PollTextDuration}");
+            Log.Debug($"Config.PollDuration is {PollsPlugin.Instance.Config.PollDuration}");
 
             PollName = name;
             Votes = new int[2] { 0, 0 };
@@ -57,7 +59,7 @@ namespace Polls
             ActiveCoro = Timing.CallDelayed(delay, () =>
             {
                 BroadcastToAllPlayers(BroadcastTime, $"The poll has ended! {Votes[0]} voted yes and {Votes[1]} voted no!");
-                Polls.Instance.ActivePoll = null;
+                PollsPlugin.Instance.ActivePoll = null;
             });
         }
 

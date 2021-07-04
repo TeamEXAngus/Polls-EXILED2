@@ -8,7 +8,7 @@ namespace Polls.Commands
     [CommandHandler(typeof(ClientCommandHandler))]
     internal class Vote : ICommand
     {
-        private static Poll ActivePoll => Polls.Instance.ActivePoll;
+        private static Poll ActivePoll => PollsPlugin.Instance.ActivePoll;
 
         public string Command { get; } = "vote";
 

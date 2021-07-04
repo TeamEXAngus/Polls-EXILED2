@@ -23,7 +23,7 @@ namespace Commands.StartPoll
                 return false;
             }
 
-            if (!(Polls.Polls.Instance.ActivePoll is null))
+            if (!(Polls.PollsPlugin.Instance.ActivePoll is null))
             {
                 response = "There is an already active poll!";
                 return false;
@@ -42,7 +42,7 @@ namespace Commands.StartPoll
                 message += arg + " ";
             }
 
-            Polls.Polls.Instance.ActivePoll = new Polls.Poll(message);
+            Polls.PollsPlugin.Instance.ActivePoll = new Polls.Poll(message);
 
             response = $"Succesfully created poll: {message}";
             return true;
