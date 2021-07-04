@@ -7,19 +7,18 @@ namespace Polls
 {
     public class PollsPlugin : Plugin<Config>
     {
-        public static PollsPlugin Instance;
+        public static PollsPlugin Instance { get; } = new PollsPlugin();
 
         public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
         public override Version Version { get; } = new Version(1, 0, 7);
 
         public Poll ActivePoll = null;
 
-        public PollsPlugin()
+        private PollsPlugin()
         { }
 
         public override void OnEnabled()
         {
-            Instance = this;
         }
 
         public override void OnDisabled()
