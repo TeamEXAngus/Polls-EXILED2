@@ -10,7 +10,7 @@ namespace Polls
         public static PollsPlugin Instance { get; } = new PollsPlugin();
 
         public override Version RequiredExiledVersion { get; } = new Version(2, 10, 0);
-        public override Version Version { get; } = new Version(1, 0, 8);
+        public override Version Version { get; } = new Version(1, 0, 9);
 
         public Poll ActivePoll = null;
 
@@ -41,15 +41,11 @@ namespace Polls
             BroadcastTime = PollsPlugin.Instance.Config.PollTextDuration;
             PollDuration = PollsPlugin.Instance.Config.PollDuration;
 
-            Log.Debug($"New Poll created! BroadcastTime is {BroadcastTime} and PollDuration is {PollDuration}");
-            Log.Debug($"Config.PollTextDuration is {PollsPlugin.Instance.Config.PollTextDuration}");
-            Log.Debug($"Config.PollDuration is {PollsPlugin.Instance.Config.PollDuration}");
-
             PollName = name;
             Votes = new int[2] { 0, 0 };
             AlreadyVoted = new List<Player>();
 
-            BroadcastToAllPlayers(BroadcastTime, $"Poll: {PollName}\nType \".vote yes\" or \".vote no\" in the console to vote!");
+            BroadcastToAllPlayers(BroadcastTime, PollsPlugin.Instance.Config.PollStartedBroadcast.Replace("{message}", PollName));
             EndPoll(PollDuration);
         }
 
@@ -57,7 +53,7 @@ namespace Polls
         {
             ActiveCoro = Timing.CallDelayed(delay, () =>
             {
-                BroadcastToAllPlayers(BroadcastTime, $"The poll has ended! {Votes[0]} voted yes and {Votes[1]} voted no!");
+                BroadcastToAllPlayers(BroadcastTime, PollsPlugin.Instance.Config.PollEndedBroadcast.Replace("{numYes}", Votes[0].ToString()).Replace("{numNo}", Votes[1].ToString()));
                 PollsPlugin.Instance.ActivePoll = null;
             });
         }

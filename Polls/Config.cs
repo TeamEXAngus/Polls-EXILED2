@@ -13,5 +13,11 @@ namespace Polls
 
         [Description("The number of seconds which polls should last for.")]
         public int PollDuration { get; set; } = 30;
+
+        [Description("Message that will be broadcast when a poll starts.")]
+        public string PollStartedBroadcast { get; set; } = "Poll: {message}\nType \".vote yes\" or \".vote no\" in the console to vote!";
+
+        [Description("Message that will be broadcast when a poll Ends.")]
+        public string PollEndedBroadcast { get; set; } = "The poll has ended! {numYes} voted yes and {numNo} voted no!";
     }
 }
